@@ -1,0 +1,33 @@
+{
+  "name": "centroid-stream",
+  "version": "0.0.1",
+  "description": "Streaming GeoJSON geometry converter. Get centroids from any geometry.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wpears/centroid-stream.git"
+  },
+  "keywords": [
+    "centroid",
+    "GeoJSON",
+    "geometry",
+    "through2",
+    "transform"
+  ],
+  "author": "Wyatt Pearsall <wyatt.pearsall@cfpb.gov>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wpears/centroid-stream/issues"
+  },
+  "homepage": "https://github.com/wpears/centroid-stream",
+  "devDependencies": {
+    "tape": "^4.0.0"
+  },
+  "dependencies": {
+    "through2": "^2.0.0",
+    "turf-centroid": "^1.1.2"
+  }
+}
