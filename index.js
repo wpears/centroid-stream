@@ -1,16 +1,26 @@
 var through = require('through2');
 var centroid = require('turf-centroid');
 
-var point = 'Point';
-var type = 'type';
-var geometry = 'geometry';
+var pointString = 'Point';
+var typeString = 'type';
+var geoString = 'geometry';
 
 module.exports = function(){
   return through.obj(function(chunk, enc, cb){
 
+    var geometry;
+
+    try{
+      geometry = centroid(chunk).geometry;
+    }catch(e){
+      return process.nextTick(function(){
+        cb(e);
+      });
+    }
+
     var output = {
-      type: point,
-      geometry: centroid(chunk).geometry,
+      type: pointString,
+      geometry: geometry,
       properties: null
     };
 
@@ -18,11 +28,11 @@ module.exports = function(){
 
     for(var i=0; i<props.length; i++){
       var key = props[i];
-      if(key !== type && key !== geometry){
+      if(key !== typeString && key !== geoString){
         output[key] = chunk[key];
       }
     }
 
-    cb(null, output);
+    return cb(null, output);
   });
 };
