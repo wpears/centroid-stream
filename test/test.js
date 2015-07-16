@@ -112,3 +112,25 @@ test('Feature Collection', function(t){
   );
 
 });
+
+test('Error conditions', function(t){
+  t.plan(2);
+
+  var cs = centroidStream();
+  cs.end('notanobject');
+  cs.on('error', function(err){
+    t.ok(err, 'Errors when passed a non-object');
+  });
+
+  var cs2 = centroidStream();
+  cs2.end({"type": "Feature", "geometry": {"type": "fake", "coordinates": [14, 14]}, "properties": null});
+  cs2.on('error', function(err){
+    t.ok(err, 'Errors when passed a bad geometry type');
+  });
+
+  var cs3 = centroidStream();
+  cs3.end({"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[14, 14], [15, 15]]}, "properties": null});
+  cs3.on('error', function(err){
+    t.ok(err, 'Errors when passed invalid GeoJSON (polygons must be LinearRings)');
+  });
+});
