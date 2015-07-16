@@ -6,8 +6,9 @@ test('Features', function(t){
   t.plan(6);
 
   var cs = centroidStream();
+  var stats = streamStats.obj({store: 1});
 
-  cs.pipe(streamStats.obj('features', {store: 1})).sink();
+  cs.pipe(stats).sink();
 
   cs.write({
     "type": "Feature",
@@ -45,9 +46,9 @@ test('Features', function(t){
     }
   });
 
-  cs.on('end', function(err){
+  stats.on('finish', function(err){
     if(err) throw err;
-    var result = streamStats.getResult('features');
+    var result = this.getResult();
     t.deepEqual(result.chunks[0].chunk.geometry, {"type": "Point", "coordinates": [102, 0.5]}, 'Gets point from point');
     t.deepEqual(result.chunks[0].chunk.properties, {"prop0": "value0"}, 'Passes properties from point');
     t.deepEqual(result.chunks[1].chunk.geometry, {"type": "Point", "coordinates": [103.5, 0.5]}, 'Gets point from line');
@@ -56,6 +57,58 @@ test('Features', function(t){
     t.deepEqual(result.chunks[2].chunk.properties, {"prop0": "value0", "prop1": {"this": "that"}}, 'Passes properties from polygon');
   });
 
+});
 
+test('Feature Collection', function(t){
+  t.plan(2);
+
+  var cs = centroidStream();
+  var stats = streamStats.obj({store: 1})
+
+  cs.pipe(stats).sink();
+
+  stats.on('finish', function(err){
+    if(err) throw err;
+    var result = this.getResult();
+
+    t.deepEqual(result.chunks[0].chunk.geometry, {"type": "Point", "coordinates": [102, 0.5]}, 'Gets point from feature collection');
+    t.deepEqual(result.chunks[0].chunk.properties, null, 'Properties are null on feature created from feature collection.');
+
+  });
+
+  cs.end({ "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+        "properties": {"prop0": "value0"}
+        },
+      { "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+            ]
+          },
+        "properties": {
+          "prop0": "value0",
+          "prop1": 0.0
+          }
+        },
+      { "type": "Feature",
+         "geometry": {
+           "type": "Polygon",
+           "coordinates": [
+             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+               [100.0, 1.0], [100.0, 0.0] ]
+             ]
+         },
+         "properties": {
+           "prop0": "value0",
+           "prop1": {"this": "that"}
+           }
+         }
+       ]
+     }
+  );
 
 });
