@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/wpears/centroid-stream",
   "devDependencies": {
+    "stream-stats": "^0.4.1",
     "tape": "^4.0.0"
   },
   "dependencies": {
