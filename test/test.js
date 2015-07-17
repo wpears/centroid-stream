@@ -8,7 +8,7 @@ test('Features', function(t){
   var cs = centroidStream();
   var stats = streamStats.obj({store: 1});
 
-  cs.pipe(stats).sink();
+  cs.pipe(stats).pipe(stats.sink());
 
   cs.write({
     "type": "Feature",
@@ -65,7 +65,7 @@ test('Feature Collection', function(t){
   var cs = centroidStream();
   var stats = streamStats.obj({store: 1})
 
-  cs.pipe(stats).sink();
+  cs.pipe(stats).pipe(stats.sink());
 
   stats.on('finish', function(err){
     if(err) throw err;
