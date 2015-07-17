@@ -1,6 +1,6 @@
 {
   "name": "centroid-stream",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Streaming GeoJSON geometry converter. Get centroids from any geometry.",
   "main": "index.js",
   "scripts": {
