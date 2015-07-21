@@ -59,6 +59,126 @@ test('Features', function(t){
 
 });
 
+
+test('Features with stringified output', function(t){
+  t.plan(1);
+
+  var cs = centroidStream.stringify();
+  var stats = streamStats({store: 1});
+
+  cs.pipe(stats).pipe(stats.sink());
+
+  cs.write({
+    "type": "Feature",
+    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+    "properties": {"prop0": "value0"}
+  });
+
+  cs.write({
+    "type": "Feature",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+      ]
+    },
+    "properties": {
+      "prop0": "value0",
+      "prop1": 0.0
+    }
+  });
+
+  cs.end({
+    "type": "Feature",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+          [100.0, 1.0], [100.0, 0.0]
+        ]
+      ]
+    },
+    "properties": {
+      "prop0": "value0",
+      "prop1": {"this": "that"}
+    }
+  });
+
+  stats.on('finish', function(err){
+    if(err) throw err;
+    var result = this.getResult();
+    var store = '{"type":"Point","geometry":{"type":"Point","coordinates":[102,0.5]},"properties":{"prop0":"value0"}}{"type":"Point","geometry":{"type":"Point","coordinates":[103.5,0.5]},"properties":{"prop0":"value0","prop1":0}}{"type":"Point","geometry":{"type":"Point","coordinates":[100.5,0.5]},"properties":{"prop0":"value0","prop1":{"this":"that"}}}'
+    t.equal(result.store.toString(), store, 'Results in proper stringified output for all types.');
+  });
+
+});
+
+
+test('Features with stringified output, passing object', function(t){
+  t.plan(1);
+
+  var cs = centroidStream({writableObjectMode: true, readableObjectMode: false});
+  var stats = streamStats({store: 1});
+
+  cs.pipe(stats).pipe(stats.sink());
+
+  cs.write({
+    "type": "Feature",
+    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+    "properties": {"prop0": "value0"}
+  });
+
+  cs.write({
+    "type": "Feature",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+      ]
+    },
+    "properties": {
+      "prop0": "value0",
+      "prop1": 0.0
+    }
+  });
+
+  cs.end({
+    "type": "Feature",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+          [100.0, 1.0], [100.0, 0.0]
+        ]
+      ]
+    },
+    "properties": {
+      "prop0": "value0",
+      "prop1": {"this": "that"}
+    }
+  });
+
+  stats.on('finish', function(err){
+    if(err) throw err;
+    var result = this.getResult();
+    var store = '{"type":"Point","geometry":{"type":"Point","coordinates":[102,0.5]},"properties":{"prop0":"value0"}}{"type":"Point","geometry":{"type":"Point","coordinates":[103.5,0.5]},"properties":{"prop0":"value0","prop1":0}}{"type":"Point","geometry":{"type":"Point","coordinates":[100.5,0.5]},"properties":{"prop0":"value0","prop1":{"this":"that"}}}'
+    t.equal(result.store.toString(), store, 'Results in proper stringified output for all types.');
+  });
+
+});
+
+
+test('Bad object keys', function(t){
+  t.plan(1);
+
+  try{
+    centroidStream({readableObjectMode: false});
+  }catch(e){
+    t.pass('Error if passing object and leaving out explicit objectMode');
+  }
+});
+
+
 test('Feature Collection', function(t){
   t.plan(2);
 

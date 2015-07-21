@@ -4,13 +4,15 @@ var centroid = require('turf-centroid');
 var pointString = 'Point';
 var typeString = 'type';
 var geoString = 'geometry';
-var readable = {readableObjectMode: 1};
+var writable = {writableObjectMode: 1};
 var objectMode = {objectMode: 1};
 
 function centroidStream(obj){
   var stringify;
 
   if(!obj) obj = objectMode;
+  if(!obj.objectMode && !obj.writableObjectMode) throw new Error('centroid-stream only supports writableObjectMode. You\'ll need to parse your JSON input before streaming it in.');
+
   if(!obj.objectMode && !obj.readableObjectMode) stringify = 1;
 
   return through(obj, function(chunk, enc, cb){
@@ -47,7 +49,7 @@ function centroidStream(obj){
 }
 
 centroidStream.stringify = function(){
-  return centroidStream(readable);
+  return centroidStream(writable);
 }
 
 module.exports = centroidStream;
