@@ -4,9 +4,12 @@ var centroid = require('turf-centroid');
 var pointString = 'Point';
 var typeString = 'type';
 var geoString = 'geometry';
+var writable = {writableObjectMode: 1};
+var objectMode = {objectMode: 1};
 
-module.exports = function(){
-  return through.obj(function(chunk, enc, cb){
+module.exports = function(stringify){
+  var obj = stringify ? writable : objectMode;
+  return through(obj, function(chunk, enc, cb){
 
     var geometry;
 
@@ -32,6 +35,8 @@ module.exports = function(){
         output[key] = chunk[key];
       }
     }
+
+    if(stringify) output = JSON.stringify(output);
 
     return cb(null, output);
   });
