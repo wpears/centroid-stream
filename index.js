@@ -1,7 +1,7 @@
 var through = require('through2');
 var centroid = require('turf-centroid');
 
-var pointString = 'Point';
+var featureString = 'Feature';
 var typeString = 'type';
 var geoString = 'geometry';
 var writable = {writableObjectMode: 1};
@@ -28,7 +28,7 @@ function centroidStream(obj){
     }
 
     var output = {
-      type: pointString,
+      type: featureString,
       geometry: geometry,
       properties: null
     };

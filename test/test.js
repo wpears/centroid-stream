@@ -34,7 +34,7 @@ test('Features with stringified output', function(t){
   stats.on('finish', function(err){
     if(err) throw err;
     var result = this.getResult();
-    var store = '{"type":"Point","geometry":{"type":"Point","coordinates":[102,0.5]},"properties":{"prop0":"value0"}}{"type":"Point","geometry":{"type":"Point","coordinates":[103.5,0.5]},"properties":{"prop0":"value0","prop1":0}}{"type":"Point","geometry":{"type":"Point","coordinates":[100.5,0.5]},"properties":{"prop0":"value0","prop1":{"this":"that"}}}'
+    var store = '{"type":"Feature","geometry":{"type":"Point","coordinates":[102,0.5]},"properties":{"prop0":"value0"}}{"type":"Feature","geometry":{"type":"Point","coordinates":[103.5,0.5]},"properties":{"prop0":"value0","prop1":0}}{"type":"Feature","geometry":{"type":"Point","coordinates":[100.5,0.5]},"properties":{"prop0":"value0","prop1":{"this":"that"}}}'
     t.equal(result.store.toString(), store, 'Results in proper stringified output for all types.');
   });
 
@@ -51,7 +51,7 @@ test('Features with stringified output, passing object', function(t){
   stats.on('finish', function(err){
     if(err) throw err;
     var result = this.getResult();
-    var store = '{"type":"Point","geometry":{"type":"Point","coordinates":[102,0.5]},"properties":{"prop0":"value0"}}{"type":"Point","geometry":{"type":"Point","coordinates":[103.5,0.5]},"properties":{"prop0":"value0","prop1":0}}{"type":"Point","geometry":{"type":"Point","coordinates":[100.5,0.5]},"properties":{"prop0":"value0","prop1":{"this":"that"}}}'
+    var store = '{"type":"Feature","geometry":{"type":"Point","coordinates":[102,0.5]},"properties":{"prop0":"value0"}}{"type":"Feature","geometry":{"type":"Point","coordinates":[103.5,0.5]},"properties":{"prop0":"value0","prop1":0}}{"type":"Feature","geometry":{"type":"Point","coordinates":[100.5,0.5]},"properties":{"prop0":"value0","prop1":{"this":"that"}}}'
     t.equal(result.store.toString(), store, 'Results in proper stringified output for all types.');
   });
 
