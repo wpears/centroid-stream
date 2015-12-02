@@ -23,7 +23,7 @@ function centroidStream(obj){
       geometry = centroid(chunk).geometry;
     }catch(e){
       return process.nextTick(function(){
-        cb(e);
+        return cb(e);
       });
     }
 
